@@ -3,19 +3,20 @@ package manager
 import (
 	"context"
 	"fmt"
-	"github.com/go-xorm/xorm"
+	"github.com/jinzhu/gorm"
 )
 
 type DBManager struct {
 	User     string
 	Password string
 	DBName   string
-	engine   *xorm.Engine
+	Engine   *gorm.DB
 	Context  context.Context
 }
 
 func NewDBManager(user, password, db string, context context.Context) (*DBManager, error) {
-	engine, err := xorm.NewEngine("mysql", fmt.Sprintf("%s:%s@%s?charset=utf8", user, password, db))
+
+	engine, err := gorm.Open("mysql", fmt.Sprintf("%s:%s@%s?charset=utf8", user, password, db))
 	if err != nil {
 		return nil, err
 	}
@@ -24,7 +25,7 @@ func NewDBManager(user, password, db string, context context.Context) (*DBManage
 		User:     user,
 		Password: password,
 		DBName:   db,
-		engine:   engine,
+		Engine:   engine,
 		Context:  context,
 	}
 
